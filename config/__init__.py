@@ -1,0 +1,2 @@
+
+str = 'config file'
