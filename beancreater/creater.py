@@ -16,7 +16,7 @@ def printClass(bean):
     filePrinter('class', bean.className, '{')
 
 
-# create class file name
+
 
 
 
