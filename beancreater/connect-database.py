@@ -12,14 +12,33 @@ try:
 except mysql.connector.Error as e:
     print('connect fails!{}'.format(e))
 cursor = cnn.cursor()
-beans = []
+
+data_base = config.mysql.config.get('database')
+
+creater_array = []
+
 try:
-    sql_query = "select column_name as columnName, data_type, character_maximum_length from information_schema.columns where table_schema = 'test' and table_name = 'runoob_tbl';"
-    cursor.execute(sql_query)
-    for columnName, data_type, character_maximum_length in cursor:
-        # print "%s, %s, %d\n" %(columnName, data_type, character_maximum_length)
-        beans.append(bean.Properties(columnName, data_type, character_maximum_length))
-        # print(columnName, data_type, character_maximum_length)
+    for table in config.mysql.tables_name:
+        beans = []
+        param = (data_base, table)
+        sql_query = "select table_name, table_comment from information_schema.tables  where table_schema = %s and table_name = %s;"
+        cursor.execute(sql_query, param)
+        table_result = cursor.fetchone()
+        if table_result:
+
+            sql_query = "select column_name as columnName, data_type, character_maximum_length, column_comment from information_schema.columns " \
+                        "where table_schema = %s and table_name = %s ;"
+            print 'table is: ', table
+
+            cursor.execute(sql_query, param)
+            result = cursor.fetchall()
+            for columnName, data_type, character_maximum_length, column_comment in result:
+                beans.append(bean.Properties(columnName, data_type, character_maximum_length, column_comment))
+
+            b = bean.Bean(beans, table, table_result[1])
+            creater = Creater(b)
+            creater.createFile()
+            creater_array.append(creater)
 
 except mysql.connector.Error as e:
     print('query error!{}'.format(e))
@@ -27,10 +46,5 @@ finally:
     cursor.close()
     cnn.close()
 
-# for b in beans:
-#     creater.encodeCamelCase(b.name)
 
-bean = bean.Bean(beans, 'runoob_tbl')
-creater = Creater(bean)
-creater.createFile()
 

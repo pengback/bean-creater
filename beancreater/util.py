@@ -3,18 +3,19 @@ import re
 
 JAVA_BASE_DATA_TYPE = ['byte', 'short', 'int', 'long', 'float', 'double', 'boolean', 'char']
 JAVA_REFECT_DICT = {
-    'varchar': 'String'
+    'varchar': 'String',
+    'datetime': 'Date'
 }
 
 def encodeCamelCase(str):
     str = str.encode('utf-8')
     pat = re.compile('(?P<upchar>_[A-Za-z])', re.I)
     m = pat.finditer(str)
-    if m is not None:
-        for r in m:
-            print r.groupdict()
-    else:
-        print 'none group'
+    # if m is not None:
+    #     for r in m:
+    #         print r.groupdict()
+    # else:
+    #     print 'none group'
     result = pat.sub(encodeCamelCaseGetUpchar, str)
     return result
 
