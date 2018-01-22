@@ -19,11 +19,8 @@ class Creater:
 
     def createFile(self):
         self.printClass(self.bean)
-
         self.printProperties(self.bean.beans)
-
         self.printSetGetMethods(self.bean.beans)
-
         self.filePrinter(True, '}')
 
     # create bean properties
