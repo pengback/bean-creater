@@ -1,7 +1,7 @@
 # encoding: UTF-8
 import mysql.connector
-import bean
-import creater
+from beancreater import bean
+from beancreater.creater import Creater
 import config.mysql
 
 #
@@ -30,5 +30,7 @@ finally:
 # for b in beans:
 #     creater.encodeCamelCase(b.name)
 
-creater.printProperties(beans)
+bean = bean.Bean(beans, 'runoob_tbl')
+creater = Creater(bean)
+creater.createFile()
 

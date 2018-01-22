@@ -8,6 +8,7 @@ class Properties:
         self.name = name
         self.type = type
         self.size = size
+        self.dataType = util.reflectJavaDataType(type)
 
     def toString(self):
         print 'name:', self.name, ';type:', self.type, ';size:', self.size
