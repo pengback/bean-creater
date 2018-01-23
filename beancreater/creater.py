@@ -30,6 +30,7 @@ class Creater:
 
     def createFile(self):
         self.fileObject = open(self.bean.className + '.java', 'w+')
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.entity;')
         self.printClass(self.bean)
         self.addTabNum()
         self.printProperties(self.bean.beans)
@@ -116,7 +117,7 @@ class Creater:
         cName = self.getFileName('controller')
         self.fileObject = open(cName+'.java', 'w+')
 
-        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.web.controller')
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.web.controller;')
         self.filePrinter(False, '/**')
         self.filePrinter(False, ' * @desc', self.bean.comment + ' Controller')
         self.filePrinter(False, ' * @create', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -171,7 +172,7 @@ class Creater:
         cName = self.getFileName('service')
         self.fileObject = open(cName + '.java', 'w+')
 
-        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.service')
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.service;')
         self.filePrinter(False, '/**')
         self.filePrinter(False, ' * @desc', self.bean.comment + ' Service')
         self.filePrinter(False, ' * @create', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -212,7 +213,7 @@ class Creater:
         cName = self.getFileName('dao')
         self.fileObject = open(cName + '.java', 'w+')
 
-        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.dao')
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.dao;')
         self.filePrinter(False, '/**')
         self.filePrinter(False, ' * @desc', self.bean.comment + ' Dao')
         self.filePrinter(False, ' * @create', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))

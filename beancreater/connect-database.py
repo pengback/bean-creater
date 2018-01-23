@@ -6,6 +6,9 @@ import config.mysql
 
 #
 
+package_path = raw_input("请输入包路径：")
+if package_path:
+    config.mysql.PACKAGE_BASE_PATH = package_path
 
 try:
     cnn = mysql.connector.connect(**config.mysql.config)
