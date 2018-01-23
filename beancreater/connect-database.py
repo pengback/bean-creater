@@ -39,6 +39,8 @@ try:
             creater = Creater(b)
             creater.createFile()
             creater.createController()
+            creater.createService()
+            creater.createJpaDao()
             creater_array.append(creater)
 
 except mysql.connector.Error as e:

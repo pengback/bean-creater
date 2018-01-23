@@ -95,6 +95,23 @@ class Creater:
         self.fileObject.writelines(s)
 
 
+    def getExtendsClass(self, type):
+        if type in config.mysql.EXTENDS_CLASS:
+            return config.mysql.EXTENDS_CLASS.get(type).replace('$bean_name$', self.bean.className)
+        else:
+            return None
+
+    def getFileName(self, type):
+        if type == 'controller':
+            return self.bean.className + 'Controller'
+        elif type == 'service':
+            return self.bean.className + 'Service'
+        elif type == 'dao':
+            return self.bean.className + 'Dao'
+        else:
+            return self.bean.className
+
+
     def createController(self):
         cName = self.getFileName('controller')
         self.fileObject = open(cName+'.java', 'w+')
@@ -117,12 +134,13 @@ class Creater:
         self.filePrinter(True, 'private final Logger LOGGER = LoggerFactory.getLogger('+cName+'.class);')
 
         self.filePrinter(False, '@Autowired')
-        self.filePrinter(True, 'private', self.getFileName('service'), self.getFileName('service'), ';')
+        autoBean = self.getFileName('service')
+        self.filePrinter(True, 'private', autoBean, autoBean[:1].lower()+autoBean[1:]+';')
 
         self.filePrinter(False, '@Override')
         self.filePrinter(False, 'protected BaseService<'+self.bean.className+', String> getEntityService() {')
         self.addTabNum()
-        self.filePrinter(False, 'return reportInfoService;')
+        self.filePrinter(False, 'return', autoBean[:1].lower()+autoBean[1:]+';')
         self.subTabNum()
         self.filePrinter(True, '}')
 
@@ -140,27 +158,72 @@ class Creater:
         self.subTabNum()
         self.filePrinter(True, '}')
 
-
-
+        self.filePrinter(True)
+        self.filePrinter(True)
+        self.filePrinter(True)
+        self.filePrinter(True)
         self.subTabNum()
         self.filePrinter(True, '}')
         self.fileObject = None
 
 
-    def getExtendsClass(self, type):
-        if type in config.mysql.EXTENDS_CLASS:
-            return config.mysql.EXTENDS_CLASS.get(type).replace('$bean_name$', self.bean.className)
-        else:
-            return None
+    def createService(self):
+        cName = self.getFileName('service')
+        self.fileObject = open(cName + '.java', 'w+')
 
-    def getFileName(self, type):
-        if type == 'controller':
-            return self.bean.className + 'Controller'
-        elif type == 'service':
-            return self.bean.className + 'Service'
-        elif type == 'dao':
-            return self.bean.className + 'Dao'
-        else:
-            return self.bean.className
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.service')
+        self.filePrinter(False, '/**')
+        self.filePrinter(False, ' * @desc', self.bean.comment + ' Service')
+        self.filePrinter(False, ' * @create', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+        self.filePrinter(False, ' **/')
+        self.filePrinter(False, '@Service')
+        self.filePrinter(False, '@Transactional')
 
+        swap = ['public', 'class', cName]
+        if self.getExtendsClass('service'):
+            swap.append('extends')
+            swap.append(self.getExtendsClass('service'))
+        swap.append('{')
+        self.filePrinter(True, *swap)
+        self.addTabNum()
+        self.filePrinter(True, 'private final Logger LOGGER = LoggerFactory.getLogger(' + cName + '.class);')
+
+        self.filePrinter(False, '@Autowired')
+        autoBean = self.getFileName('dao')
+        self.filePrinter(True, 'private', autoBean, autoBean[:1].lower()+autoBean[1:]+';')
+
+        self.filePrinter(False, '@Override')
+        self.filePrinter(False, 'protected JpaBaseDao<' + self.bean.className + ', String> getEntityDao() {')
+        self.addTabNum()
+        self.filePrinter(False, 'return', autoBean[:1].lower()+autoBean[1:]+';')
+        self.subTabNum()
+        self.filePrinter(True, '}')
+
+        self.filePrinter(True)
+        self.filePrinter(True)
+        self.filePrinter(True)
+        self.filePrinter(True)
+        self.subTabNum()
+        self.filePrinter(True, '}')
+        self.fileObject = None
+
+
+    def createJpaDao(self):
+        cName = self.getFileName('dao')
+        self.fileObject = open(cName + '.java', 'w+')
+
+        self.filePrinter(True, 'package', config.mysql.PACKAGE_BASE_PATH + '.dao')
+        self.filePrinter(False, '/**')
+        self.filePrinter(False, ' * @desc', self.bean.comment + ' Dao')
+        self.filePrinter(False, ' * @create', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+        self.filePrinter(False, ' **/')
+        self.filePrinter(False, '@Repository')
+
+        swap = ['public', 'interface', cName]
+        if self.getExtendsClass('service'):
+            swap.append('extends')
+            swap.append(self.getExtendsClass('dao'))
+        swap.append('{')
+        self.filePrinter(True, *swap)
+        self.filePrinter(True, '}')
 
