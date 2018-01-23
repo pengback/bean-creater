@@ -20,7 +20,7 @@ class Bean:
     'bean class'
 
     def __init__(self, beans, tableName, comment):
-        self.className = util.encodeCamelCase(tableName)
+        self.className = util.encodeCamelCase(tableName.capitalize())
         self.beans = beans
         self.tableName = tableName
         self.comment = comment.encode('utf-8')

@@ -38,6 +38,7 @@ try:
             b = bean.Bean(beans, table, table_result[1])
             creater = Creater(b)
             creater.createFile()
+            creater.createController()
             creater_array.append(creater)
 
 except mysql.connector.Error as e:
